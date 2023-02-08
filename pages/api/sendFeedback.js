@@ -1,4 +1,3 @@
-// send data on to hygraph
 
 export default async (req, res) => {
         const { body, email, feedbackLevel, lesson } = req.body;

@@ -1,9 +1,12 @@
 import React, {useState} from 'react';
 import Radio from './Radio';
-
+import {useUser} from '@clerk/nextjs'
 const Form = ({handleSubmit}) => {
+    const {user} = useUser();
+    const {emailAddresses} = user;
+    const email = emailAddresses[0].emailAddress
     return (
-        <form class="flex flex-col gap-2" onSubmit={handleSubmit}>
+        <form className="flex flex-col gap-2" onSubmit={handleSubmit}>
                 <h3>Submit feedback</h3>
                 <div className="flex flex-col">
                     <label htmlFor="helpful">Was this helpful?</label>
@@ -21,7 +24,7 @@ const Form = ({handleSubmit}) => {
                 </div>
                 <div className='flex flex-col'>
                     <label htmlFor="email">Email</label>
-                    <input className="border border-gray-300 rounded-md" type="email" name="email" id="email" />
+                    <input value={email} className="border border-gray-300 rounded-md" type="email" name="email" id="email" />
                 </div>
                 <div className="flex flex-col">
                     <label htmlFor="comments">Comments</label>

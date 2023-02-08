@@ -4,16 +4,8 @@ import Navigation from "../../../components/Navigation.jsx";
 import { getAllCourses, getCourseData } from "../../../lib/courses.js";
 import { RichText } from '@graphcms/rich-text-react-renderer';
 // set up static paths
-export async function getStaticPaths() {
-    const paths = await getAllCourses();
-    return {
-        paths,
-        fallback: false,
-    };
-    }
 
-
-export async function getStaticProps({ params }) {
+export async function getServerSideProps({ params }) {
     const courseData = await getCourseData(params.slug);
     return {
         props: {
@@ -21,6 +13,9 @@ export async function getStaticProps({ params }) {
         },
     };
     }
+
+
+
 
 
 export default function Course({ courseData }) {
@@ -35,7 +30,7 @@ export default function Course({ courseData }) {
                 content={courseData.body.json} 
                 references={courseData.body.references}  
             />
-
+            
             </Content>
             
 
