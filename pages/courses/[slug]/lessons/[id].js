@@ -1,44 +1,13 @@
 import Content from "../../../../components/Content";
 import Navigation from "../../../../components/Navigation";
 import Feedback from "../../../../components/Feedback";
+import Main from "../../../../layouts/Main";
 
-export async function getStaticPaths() {
+const LOGGEDIN = false;
 
-    const response = await fetch("https://api-us-east-1-shared-usea1-02.hygraph.com/v2/clddka9yq1aw301ui7zzh4kf3/master", {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            query: `
-            query Lessons {
-                lessons {
-                  id 
-                  title
-                  course {
-                    slug                    
-                  }
-                }
-              }
-              `,
-        }),
-    });
-    const data = await response.json();
-    const paths = data.data.lessons.map((lesson) => {
-        return {
-            params: {
-                id: lesson.id,
-                slug: lesson.course.slug
-            },
-        };
-    });
-    return {
-        paths,
-        fallback: false,
-    };
-}
 
-export async function getStaticProps({ params }) {
+export async function getServerSideProps({params}) {
+    const { id } = params;
     const response = await fetch("https://api-us-east-1-shared-usea1-02.hygraph.com/v2/clddka9yq1aw301ui7zzh4kf3/master", {
         method: 'POST',
         headers: {
@@ -53,12 +22,26 @@ export async function getStaticProps({ params }) {
                     body {
                         html
                     }
+                    moduleModel {
+                        isLocked
+                    }
                     description
                     title
                     videoUrl
-                    course {
-                        slug
+                    navDetails: moduleModel {
                         title
+                        course {
+                            title
+                            slug
+                            modules: moduleModels {
+                                isLocked
+                                title
+                                lessons {
+                                  id
+                                  title
+                                }
+                              }
+                        }
                         lessons {
                             id
                             title
@@ -68,11 +51,12 @@ export async function getStaticProps({ params }) {
             }
             `,
             variables: {
-                id: params.id,
+                id,
             },
         }),
     });
     const json = await response.json();
+    console.log(json.errors)
     const data = json.data.lesson;
 
     return {
@@ -82,17 +66,34 @@ export async function getStaticProps({ params }) {
     };
 }
 
-export default function Lesson(props) {
 
+
+
+
+export default function Lesson(props) {
+    console.log({props})
     return (
+        <Main>
         <div className="grid-cols-[minmax(200px,250px)_minmax(40ch,_1fr)] grid gap-4">
-            <Navigation lessonId={props.id} course={props.course} lessons={props.course.lessons} />
+            <Navigation lessonId={props.id} course={props.navDetails.course} modules={props.navDetails.course.modules} lessons={props.navDetails.lessons} loggedIn={LOGGEDIN} />
             <Content>
-                <h1 className="text-3xl font-bold">{props.title}</h1>
-                <div dangerouslySetInnerHTML={{ __html: props.body.html }} />
-                <Feedback lesson={props.id} />
+                {(!props.moduleModel.isLocked || LOGGEDIN) ? (
+                <>
+                    <h1 className="text-3xl font-bold">{props.title}</h1>
+                    <div dangerouslySetInnerHTML={{ __html: props.body.html }} />
+                    <Feedback lesson={props.id} />
+                </>)
+                
+                : (
+                    <>
+                        <h1 className="text-3xl font-bold">{props.title}</h1>
+                        <p>You must be logged in to view this content.</p>
+
+                    </>)}
+                
             </Content>
             
         </div>
+        </Main>
     );
 }
