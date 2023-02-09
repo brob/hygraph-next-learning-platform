@@ -3,7 +3,7 @@ import Radio from './Radio';
 
 const Form = ({handleSubmit}) => {
     return (
-        <form class="flex flex-col gap-2" onSubmit={handleSubmit}>
+        <form className="flex flex-col gap-2" onSubmit={handleSubmit}>
                 <h3>Submit feedback</h3>
                 <div className="flex flex-col">
                     <label htmlFor="helpful">Was this helpful?</label>
