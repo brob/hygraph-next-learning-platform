@@ -2,8 +2,7 @@ import Content from "../../../../components/Content";
 import Navigation from "../../../../components/Navigation";
 import Feedback from "../../../../components/Feedback";
 import Main from "../../../../layouts/Main";
-
-const LOGGEDIN = false;
+import {useUser} from '@clerk/nextjs';
 
 
 export async function getServerSideProps({params}) {
@@ -34,6 +33,7 @@ export async function getServerSideProps({params}) {
                             title
                             slug
                             modules: moduleModels {
+                                id
                                 isLocked
                                 title
                                 lessons {
@@ -61,7 +61,7 @@ export async function getServerSideProps({params}) {
 
     return {
         props: {
-            ...data
+            ...data,
         },
     };
 }
@@ -70,26 +70,29 @@ export async function getServerSideProps({params}) {
 
 
 
-export default function Lesson(props) {
-    console.log({props})
+export default function Lesson({id, navDetails, title, body, moduleModel}) {
+    const { user } = useUser();
+    const loggedIn = user ? true : false;
+
     return (
         <Main>
         <div className="grid-cols-[minmax(200px,250px)_minmax(40ch,_1fr)] grid gap-4">
-            <Navigation lessonId={props.id} course={props.navDetails.course} modules={props.navDetails.course.modules} lessons={props.navDetails.lessons} loggedIn={LOGGEDIN} />
+            <Navigation lessonId={id} course={navDetails.course} modules={navDetails.course.modules} lessons={navDetails.lessons} loggedIn={loggedIn} />
             <Content>
-                {(!props.moduleModel.isLocked || LOGGEDIN) ? (
+                {(!moduleModel.isLocked || loggedIn) ? (
                 <>
-                    <h1 className="text-3xl font-bold">{props.title}</h1>
-                    <div dangerouslySetInnerHTML={{ __html: props.body.html }} />
-                    <Feedback lesson={props.id} />
+                    <h1 className="text-3xl font-bold">{title}</h1>
+                    <div dangerouslySetInnerHTML={{ __html: body.html }} />
+                    <Feedback lesson={id} />
                 </>)
                 
                 : (
                     <>
-                        <h1 className="text-3xl font-bold">{props.title}</h1>
+                        <h1 className="text-3xl font-bold">{title}</h1>
                         <p>You must be logged in to view this content.</p>
-
-                    </>)}
+                    </>
+                )
+                }
                 
             </Content>
             

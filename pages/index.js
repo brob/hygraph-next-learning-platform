@@ -2,8 +2,6 @@ import Head from 'next/head'
 import Image from 'next/image'
 import Content from '../components/Content'
 import Main from '../layouts/Main'
-import Content from '../components/Content'
-import styles from '../styles/Home.module.css'
 import { ClerkProvider, useUser, SignIn, UserButton, SignedOut } from '@clerk/nextjs'
 
 function containsLockedModules(modules) {
