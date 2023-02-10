@@ -19,12 +19,12 @@ export async function getServerSideProps({ params }) {
 
 
 
-export default function Course({ courseData }) {
+export default function Course({ courseData, loggedIn }) {
     console.log(courseData)
     return (
         <Main>
         <div className="grid-cols-[minmax(200px,250px)_minmax(40ch,_1fr)] grid gap-4">
-            <Navigation course={courseData} modules={courseData?.modules} lessons={courseData?.lessons} />
+            <Navigation loggedIn={loggedIn} course={courseData} modules={courseData?.modules} lessons={courseData?.lessons} />
             <Content>
             <h1 className="text-3xl font-bold">{courseData.title}</h1>
 

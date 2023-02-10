@@ -70,10 +70,8 @@ export async function getServerSideProps({params}) {
 
 
 
-export default function Lesson({id, navDetails, title, body, moduleModel}) {
+export default function Lesson({id, navDetails, title, body, moduleModel, loggedIn}) {
     const { user } = useUser();
-    const loggedIn = user ? true : false;
-
     return (
         <Main>
         <div className="grid-cols-[minmax(200px,250px)_minmax(40ch,_1fr)] grid gap-4">

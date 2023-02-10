@@ -1,8 +1,5 @@
-import Topbar from "./Topbar"
-import {ClerkProvider, useUser, SignIn, UserButton, SignedOut} from '@clerk/nextjs'
-export default function Navigation({course, lessonId, modules}) {
-    const {user} = useUser()
-    const loggedIn = user ? true : false
+export default function Navigation({course, lessonId, modules, loggedIn}) {
+
     return (  
         <>
         <div className="shadow-md bg-white px-1">
