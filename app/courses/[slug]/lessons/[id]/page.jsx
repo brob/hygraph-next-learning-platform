@@ -1,12 +1,10 @@
-import Content from "../../../../components/Content";
-import Navigation from "../../../../components/Navigation";
-import Feedback from "../../../../components/Feedback";
-import Main from "../../../../layouts/Main";
-import {useUser} from '@clerk/nextjs';
+import Content from "../../../../../components/Content";
+import Navigation from "../../../../../components/Navigation";
+import Feedback from "../../../../../components/Feedback";
 
 
-export async function getServerSideProps({params}) {
-    const { id } = params;
+
+async function getLesson(id) {
     const response = await fetch("https://api-us-east-1-shared-usea1-02.hygraph.com/v2/clddka9yq1aw301ui7zzh4kf3/master", {
         method: 'POST',
         headers: {
@@ -56,24 +54,15 @@ export async function getServerSideProps({params}) {
         }),
     });
     const json = await response.json();
-    console.log(json.errors)
-    const data = json.data.lesson;
 
-    return {
-        props: {
-            ...data,
-        },
-    };
+    return json.data.lesson;
 }
 
 
 
-
-
-export default function Lesson({id, navDetails, title, body, moduleModel, loggedIn}) {
-    const { user } = useUser();
+export default async function Lesson({params}) {
+    const {id, navDetails, title, body, moduleModel, loggedIn=true} = await getLesson(params.id);
     return (
-        <Main>
         <div className="grid-cols-[minmax(200px,250px)_minmax(40ch,_1fr)] grid gap-4">
             <Navigation lessonId={id} course={navDetails.course} modules={navDetails.course.modules} lessons={navDetails.lessons} loggedIn={loggedIn} />
             <Content>
@@ -95,6 +84,5 @@ export default function Lesson({id, navDetails, title, body, moduleModel, logged
             </Content>
             
         </div>
-        </Main>
     );
 }

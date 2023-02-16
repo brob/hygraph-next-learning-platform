@@ -1,15 +1,10 @@
+'use client';
+
 import React, {useEffect, useState} from 'react';
 import Radio from './Radio';
-import {useUser} from '@clerk/nextjs'
 const Form = ({handleSubmit}) => {
-    const {user} = useUser();
     const [email, setEmail] = useState('');
 
-    useEffect(() => {
-        if (user) {
-            setEmail(user.primaryEmailAddress)
-        }
-    }, [user])
 
 
     return (

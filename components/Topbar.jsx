@@ -1,3 +1,4 @@
+'use client';
 import { ClerkProvider, useUser, SignIn, UserButton, SignedOut } from '@clerk/nextjs'
 import {useState} from 'react'
 import {useRouter} from 'next/router'
